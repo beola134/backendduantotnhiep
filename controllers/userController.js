@@ -213,14 +213,12 @@ exports.register = async (req, res) => {
     const { ten_dang_nhap, mat_khau, nhap_lai_mat_khau, email } = req.body;
     const hinh_anh = "219986.png";
     const quyen = req.body.quyen || "2";
-
     // Kiểm tra mật khẩu và nhập lại mật khẩu có khớp không
     if (mat_khau !== nhap_lai_mat_khau) {
       return res.status(400).json({
         message: "Mật khẩu và nhập lại mật khẩu không khớp",
       });
     }
-
     // Kiểm tra email đã tồn tại
     const emailExist = await Users.findOne({ where: { email } });
     if (emailExist) {
@@ -228,18 +226,13 @@ exports.register = async (req, res) => {
         message: "Email đã tồn tại",
       });
     }
-
     // Tạo mật khẩu bảo mật
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(mat_khau, salt);
-
     // Tạo mã OTP ngẫu nhiên
     const otp = crypto.randomInt(100000, 999999);
-
     // Tạo thời gian hết hạn cho mã OTP (3 phút)
-    const otpExpires = Date.now() + 3 * 60 * 1000; // 3 phút
-
-    // Tạo người dùng mới
+    const otpExpires = Date.now() + 3 * 60 * 1000; // 
     const user = await Users.create({
       ten_dang_nhap,
       mat_khau: hashPassword,
@@ -248,9 +241,6 @@ exports.register = async (req, res) => {
       quyen,
       otp,
       otpExpires,
-    }).catch((err) => {
-      console.error("Lỗi khi tạo người dùng:", err);
-      throw err;  // Đảm bảo lỗi sẽ được bắt lại ở phần catch của try-catch.
     });
 
     // Cấu hình gửi email OTP
@@ -258,7 +248,7 @@ exports.register = async (req, res) => {
       service: "gmail",
       auth: {
         user: "watchwristly@gmail.com",
-        pass: "nebb uwva xdvb rvih",  // Kiểm tra mật khẩu ứng dụng của Gmail nếu sử dụng bảo mật 2 lớp
+        pass: "nebb uwva xdvb rvih",
       },
     });
 
@@ -283,22 +273,17 @@ exports.register = async (req, res) => {
         </div>
       `,
     };
-
     await transporter.sendMail(mailOptions);
     res.status(200).json({
       message: "Đăng ký tài khoản thành công. Vui lòng kiểm tra email để nhận mã OTP.",
     });
-  } catch (error) {
-    // In chi tiết lỗi ra log để dễ dàng debug
-    console.error("Lỗi khi đăng ký người dùng:", error);
 
+  } catch (error) {
     res.status(500).json({
-      message: "Đã có lỗi xảy ra",
-      error: error.message, // Trả lại thông báo lỗi chi tiết cho client
+      message: error.message,
     });
   }
 };
-
 
 //kiểm tra mã otp và xác thực tài khoản
 exports.verifyOtp = async (req, res) => {
