@@ -45,7 +45,8 @@ const User = sequelize.define('User', {
     },
     googleId:{
         type: DataTypes.STRING(255),
-        allowNull: true
+        allowNull: true,
+        defaultValue: null
     },
     otp: {
         type: DataTypes.STRING(255),
