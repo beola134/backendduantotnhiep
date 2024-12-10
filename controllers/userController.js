@@ -173,7 +173,7 @@ exports.login = async (req, res) => {
     }
     // Đặt lại số lần thử đăng nhập khi đăng nhập thành công
     user.login_attempts = 0;
-    user.lock_until = '0000-00-00 00:00:00';
+    user.lock_until = null;
     await user.save();
     // Tạo token
     const token = jwt.sign({ _id: user._id, quyen: user.quyen }, process.env.TOKEN_SECRET, {
