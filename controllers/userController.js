@@ -304,7 +304,7 @@ exports.verifyOtp = async (req, res) => {
     }
     // Xác thực thành công, xóa mã OTP sau khi xác thực
     user.otp = null;
-    user.otpExpires = '0000-00-00 00:00:00';
+    user.otpExpires = null;
     await user.save();
     res.status(200).json({
       message: "Xác thực OTP thành công",
