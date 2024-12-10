@@ -48,8 +48,9 @@ sequelize.authenticate()
     // Đồng bộ các mô hình và khởi động server
     sequelize.sync()
       .then(() => {
-        app.listen(3000, () => {
-          console.log('Server đang chạy trên http://localhost:5000');
+        const PORT = process.env.PORT || 5000; // Sử dụng cổng từ môi trường (Heroku) hoặc mặc định 5000
+        app.listen(PORT, () => {
+          console.log(`Server đang chạy trên http://localhost:${PORT}`);
         });
       })
       .catch(err => {
@@ -59,6 +60,7 @@ sequelize.authenticate()
   .catch(err => {
     console.error('Không thể kết nối với cơ sở dữ liệu:', err);
   });
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
