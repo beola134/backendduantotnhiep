@@ -567,7 +567,7 @@ exports.resetPasswordByOTP = async (req, res) => {
     // Cập nhật mật khẩu mới cho người dùng
     user.mat_khau = hashedPassword;
     user.otp = null; // Xóa OTP sau khi xác thực thành công
-    user.otpExpires = '0000-00-00 00:00:00';
+    user.otpExpires = null;
     await user.save();
 
     // Phản hồi thành công
